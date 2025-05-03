@@ -34,5 +34,21 @@ namespace FilmDatabase.Api.Controllers
             }
             return Ok(film);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<FilmDto>> CreateFilm(FilmDto filmDto)
+        {
+            if (filmDto == null)
+            {
+                return BadRequest();
+            }
+
+            var createdFilm = await _filmService.CreateFilmAsync(filmDto);
+
+            return CreatedAtAction(
+                nameof(GetFilmWithActors),
+                new { id = createdFilm.Id },
+                createdFilm);
+        }
     }
 }

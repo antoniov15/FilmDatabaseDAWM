@@ -24,13 +24,70 @@ namespace FilmDatabase.Core.Services
             return films.Select(MapToFilmDto);
         }
 
-        public async Task<FilmDto> GetFilmWithActorsAsync(int id)
+        public async Task<FilmDto?> GetFilmWithActorsAsync(int id)
         {
             var film = await _filmRepository.GetFilmWithActorsAsync(id);
             if (film == null) return null;
 
             return MapToFilmDto(film);
         }
+
+        public async Task<FilmDto> CreateFilmAsync(FilmDto filmDto)
+        {
+            var film = new Film
+            {
+                Title = filmDto.Title,
+                Year = filmDto.Year,
+                Genre = filmDto.Genre,
+                Director = filmDto.Director,
+                Description = filmDto.Description,
+                FilmActors = new List<FilmActor>()
+            };
+
+            if (filmDto.Actors != null && filmDto.Actors.Any())
+            {
+                foreach (var actorDtoItem in filmDto.Actors)
+                {
+                    var nameParts = actorDtoItem.FullName.Split(' ');  // Use the renamed variable
+                    string firstName = nameParts[0];
+                    string lastName = string.Join(" ", nameParts.Skip(1));
+
+                    var existingActor = await _filmRepository.GetActorByNameAsync(firstName, lastName);  // Changed variable name
+
+                    if (existingActor == null)
+                    {
+                        var newActor = new Actor
+                        {
+                            FirstName = firstName,
+                            LastName = lastName,
+                            DateOfBirth = DateTime.Now,
+                            Nationality = "Unknown"
+                        };
+                        newActor = await _filmRepository.AddActorAsync(newActor);  // Use the new variable
+
+                        film.FilmActors.Add(new FilmActor
+                        {
+                            ActorId = newActor.Id,
+                            Role = actorDtoItem.Role
+                        });
+                    }
+                    else
+                    {
+                        film.FilmActors.Add(new FilmActor
+                        {
+                            ActorId = existingActor.Id,
+                            Role = actorDtoItem.Role
+                        });
+                    }
+                }
+            }
+
+            await _filmRepository.AddFilmAsync(film);
+
+            var savedFilm = await _filmRepository.GetFilmWithActorsAsync(film.Id);
+            return MapToFilmDto(savedFilm);
+        }
+
         // mapare
         private FilmDto MapToFilmDto(Film film)
         {

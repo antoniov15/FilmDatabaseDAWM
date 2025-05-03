@@ -7,6 +7,7 @@ namespace FilmDatabase.Core.Interfaces
     public interface IFilmService
     {
         Task<IEnumerable<FilmDto>> GetAllFilmsWithActorsAsync();
-        Task<FilmDto> GetFilmWithActorsAsync(int id);
+        Task<FilmDto?> GetFilmWithActorsAsync(int id);
+        Task<FilmDto> CreateFilmAsync(FilmDto filmDto);
     }
 }

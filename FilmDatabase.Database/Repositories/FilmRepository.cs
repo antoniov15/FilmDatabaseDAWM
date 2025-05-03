@@ -34,5 +34,25 @@ namespace FilmDatabase.Database.Repositories
                     .ThenInclude(fa => fa.Actor)
                 .FirstOrDefaultAsync(f => f.Id == id);
         }
+
+        public async Task<Film> AddFilmAsync(Film film)
+        {
+            _context.Films.Add(film);
+            await _context.SaveChangesAsync();
+            return film;
+        }
+
+        public async Task<Actor> AddActorAsync(Actor actor)
+        {
+            _context.Actors.Add(actor);
+            await _context.SaveChangesAsync();
+            return actor;
+        }
+
+        public async Task<Actor?> GetActorByNameAsync(string firstName, string lastName)
+        {
+            return await _context.Actors
+                .FirstOrDefaultAsync(a => a.FirstName == firstName && a.LastName == lastName);
+        }
     }
 }

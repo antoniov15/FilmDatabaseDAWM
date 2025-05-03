@@ -8,5 +8,8 @@ namespace FilmDatabase.Core.Interfaces
     {
         Task<IEnumerable<Film>> GetAllFilmsWithActorsAsync();
         Task<Film?> GetFilmWithActorsAsync(int id);
+        Task<Film> AddFilmAsync(Film film);
+        Task<Actor> AddActorAsync(Actor actor);
+        Task<Actor?> GetActorByNameAsync(string firstName, string lastName);
     }
 }
