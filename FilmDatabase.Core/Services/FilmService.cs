@@ -88,6 +88,32 @@ namespace FilmDatabase.Core.Services
             return MapToFilmDto(savedFilm);
         }
 
+        public async Task<FilmDto?> UpdateFilmAsync(FilmDto filmDto)
+        {
+            var existingFilm = await _filmRepository.GetFilmWithActorsAsync(filmDto.Id);
+            if (existingFilm == null) return null;
+
+            existingFilm.Title = filmDto.Title;
+            existingFilm.Year = filmDto.Year;
+            existingFilm.Genre = filmDto.Genre;
+            existingFilm.Director = filmDto.Director;
+            existingFilm.Description = filmDto.Description;
+
+            await _filmRepository.UpdateFilmAsync(existingFilm);
+
+            var updatedFilm = await _filmRepository.GetFilmWithActorsAsync(filmDto.Id);
+            return MapToFilmDto(updatedFilm);
+        }
+
+        public async Task<bool> DeleteFilmAsync(int id)
+        {
+            var existingFilm = await _filmRepository.GetFilmWithActorsAsync(id);
+            if (existingFilm == null) return false;
+
+            await _filmRepository.DeleteFilmAsync(existingFilm);
+            return true;
+        }
+
         // mapare
         private FilmDto MapToFilmDto(Film film)
         {

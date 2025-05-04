@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FilmDatabase.Core.DTOs;
 using FilmDatabase.Core.Interfaces;
 using FilmDatabase.Core.Models;
 using FilmDatabase.Database.Context;
@@ -53,6 +54,18 @@ namespace FilmDatabase.Database.Repositories
         {
             return await _context.Actors
                 .FirstOrDefaultAsync(a => a.FirstName == firstName && a.LastName == lastName);
+        }
+
+        public async Task UpdateFilmAsync(Film film)
+        {
+            _context.Films.Update(film);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFilmAsync(Film film)
+        {
+            _context.Films.Remove(film);
+            await _context.SaveChangesAsync();
         }
     }
 }

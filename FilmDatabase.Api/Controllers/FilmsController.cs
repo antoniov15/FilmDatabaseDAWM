@@ -50,5 +50,32 @@ namespace FilmDatabase.Api.Controllers
                 new { id = createdFilm.Id },
                 createdFilm);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<FilmDto>> UpdateFilm(int id, FilmDto filmDto)
+        {
+            if (id != filmDto.Id)
+            {
+                return BadRequest("ID mismatch");
+            }
+
+            var updatedFilm = await _filmService.UpdateFilmAsync(filmDto);
+            if (updatedFilm == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedFilm);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteFilm(int id)
+        {
+            var result = await _filmService.DeleteFilmAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }

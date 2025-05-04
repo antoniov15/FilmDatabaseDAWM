@@ -9,5 +9,7 @@ namespace FilmDatabase.Core.Interfaces
         Task<IEnumerable<FilmDto>> GetAllFilmsWithActorsAsync();
         Task<FilmDto?> GetFilmWithActorsAsync(int id);
         Task<FilmDto> CreateFilmAsync(FilmDto filmDto);
+        Task<FilmDto?> UpdateFilmAsync(FilmDto filmDto);
+        Task<bool> DeleteFilmAsync(int id);
     }
 }

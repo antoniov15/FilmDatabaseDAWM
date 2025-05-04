@@ -11,5 +11,7 @@ namespace FilmDatabase.Core.Interfaces
         Task<Film> AddFilmAsync(Film film);
         Task<Actor> AddActorAsync(Actor actor);
         Task<Actor?> GetActorByNameAsync(string firstName, string lastName);
+        Task UpdateFilmAsync(Film film);
+        Task DeleteFilmAsync(Film film);
     }
 }
