@@ -48,11 +48,11 @@ namespace FilmDatabase.Core.Services
             {
                 foreach (var actorDtoItem in filmDto.Actors)
                 {
-                    var nameParts = actorDtoItem.FullName.Split(' ');  // Use the renamed variable
+                    var nameParts = actorDtoItem.FullName.Split(' ');
                     string firstName = nameParts[0];
                     string lastName = string.Join(" ", nameParts.Skip(1));
 
-                    var existingActor = await _filmRepository.GetActorByNameAsync(firstName, lastName);  // Changed variable name
+                    var existingActor = await _filmRepository.GetActorByNameAsync(firstName, lastName);
 
                     if (existingActor == null)
                     {
@@ -63,7 +63,7 @@ namespace FilmDatabase.Core.Services
                             DateOfBirth = DateTime.Now,
                             Nationality = "Unknown"
                         };
-                        newActor = await _filmRepository.AddActorAsync(newActor);  // Use the new variable
+                        newActor = await _filmRepository.AddActorAsync(newActor);
 
                         film.FilmActors.Add(new FilmActor
                         {

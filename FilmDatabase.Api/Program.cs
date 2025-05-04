@@ -6,22 +6,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adăugare DbContext
+// Adaugare DbContext
 builder.Services.AddDbContext<FilmDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Înregistrare Repository și Service
+// Repository si Service
 builder.Services.AddScoped<IFilmRepository, FilmRepository>();
 builder.Services.AddScoped<IFilmService, FilmService>();
 
-// Adăugare Controllers și Swagger
+// Controllers Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configurare middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

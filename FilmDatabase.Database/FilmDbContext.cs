@@ -14,7 +14,7 @@ namespace FilmDatabase.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configurarea relatiei many-to-many dintre Film si Actor
+            // relatia many-to-many dintre Film si Actor
             modelBuilder.Entity<FilmActor>()
                 .HasKey(fa => new { fa.FilmId, fa.ActorId });
 
@@ -33,14 +33,14 @@ namespace FilmDatabase.Database.Context
         {
             if (!context.Films.Any())
             {
-                // Adaugă filme
+                // filme
                 var film1 = new Film { Title = "Inception", Year = 2010, Genre = "Sci-Fi", Director = "Christopher Nolan", Description = "A thief who steals corporate secrets..." };
                 var film2 = new Film { Title = "The Shawshank Redemption", Year = 1994, Genre = "Drama", Director = "Frank Darabont", Description = "Two imprisoned men bond over a number of years..." };
 
                 context.Films.AddRange(film1, film2);
                 context.SaveChanges();
 
-                // Adaugă actori
+                // actori
                 var actor1 = new Actor { FirstName = "Leonardo", LastName = "DiCaprio", DateOfBirth = new DateTime(1974, 11, 11), Nationality = "American" };
                 var actor2 = new Actor { FirstName = "Tom", LastName = "Hardy", DateOfBirth = new DateTime(1977, 9, 15), Nationality = "British" };
                 var actor3 = new Actor { FirstName = "Morgan", LastName = "Freeman", DateOfBirth = new DateTime(1937, 6, 1), Nationality = "American" };
@@ -49,7 +49,7 @@ namespace FilmDatabase.Database.Context
                 context.Actors.AddRange(actor1, actor2, actor3, actor4);
                 context.SaveChanges();
 
-                // Adaugă relațiile
+                // relatii
                 var filmActor1 = new FilmActor { FilmId = film1.Id, ActorId = actor1.Id, Role = "Dom Cobb" };
                 var filmActor2 = new FilmActor { FilmId = film1.Id, ActorId = actor2.Id, Role = "Eames" };
                 var filmActor3 = new FilmActor { FilmId = film2.Id, ActorId = actor3.Id, Role = "Ellis Boyd 'Red' Redding" };
