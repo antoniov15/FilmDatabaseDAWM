@@ -32,14 +32,16 @@ namespace FilmDatabase.Core.DTOs
         // Proprietăți helper pentru validarea sortării
         public bool IsValidSortBy()
         {
-            var validSortFields = new[] { "Title", "Year", "Director", "Genre" };
-            return string.IsNullOrEmpty(SortBy)  validSortFields.Contains(SortBy, StringComparer.OrdinalIgnoreCase);
+            var validSortFields = new string[] { "Title", "Year", "Director", "Genre" };
+            return string.IsNullOrEmpty(SortBy) || Array.Exists(validSortFields, field =>
+                string.Equals(field, SortBy, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool IsValidSortOrder()
         {
-            var validSortOrders = new[] { "asc", "desc" };
-            return string.IsNullOrEmpty(SortOrder)  validSortOrders.Contains(SortOrder, StringComparer.OrdinalIgnoreCase);
+            var validSortOrders = new string[] { "asc", "desc" };
+            return string.IsNullOrEmpty(SortOrder) || Array.Exists(validSortOrders, order =>
+                string.Equals(order, SortOrder, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
