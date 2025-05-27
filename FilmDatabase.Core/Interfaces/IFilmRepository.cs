@@ -1,4 +1,5 @@
-﻿using FilmDatabase.Core.Models;
+﻿using FilmDatabase.Core.DTOs;
+using FilmDatabase.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace FilmDatabase.Core.Interfaces
     public interface IFilmRepository
     {
         Task<IEnumerable<Film>> GetAllFilmsWithActorsAsync();
+        Task<PagedResult<Film>> GetFilmsWithFilteringSortingPagingAsync(FilmQueryParameters queryParams);
         Task<Film?> GetFilmWithActorsAsync(int id);
         Task<Film> AddFilmAsync(Film film);
         Task<Actor> AddActorAsync(Actor actor);
