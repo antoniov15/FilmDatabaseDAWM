@@ -24,6 +24,15 @@ namespace FilmDatabase.Core.Services
             return films.Select(MapToFilmDto);
         }
 
+        public async Task<PagedResult<FilmDto>> GetFilmsWithFilteringSortingPagingAsync(FilmQueryParameters queryParams)
+        {
+            var pagedResult = await _filmRepository.GetFilmsWithFilteringSortingPagingAsync(queryParams);
+
+            var filmDtos = pagedResult.Data.Select(MapToFilmDto);
+
+            return new PagedResult<FilmDto>(filmDtos, pagedResult.PageNumber, pagedResult.PageSize, pagedResult.TotalRecords);
+        }
+
         public async Task<FilmDto?> GetFilmWithActorsAsync(int id)
         {
             var film = await _filmRepository.GetFilmWithActorsAsync(id);
@@ -91,7 +100,10 @@ namespace FilmDatabase.Core.Services
         public async Task<FilmDto?> UpdateFilmAsync(FilmDto filmDto)
         {
             var existingFilm = await _filmRepository.GetFilmWithActorsAsync(filmDto.Id);
-            if (existingFilm == null) return null;
+            if (existingFilm == null)
+            {
+                throw new KeyNotFoundException($"Film with ID {filmDto.Id} not found.");
+            }
 
             existingFilm.Title = filmDto.Title;
             existingFilm.Year = filmDto.Year;
@@ -125,12 +137,12 @@ namespace FilmDatabase.Core.Services
                 Genre = film.Genre,
                 Director = film.Director,
                 Description = film.Description,
-                Actors = film.FilmActors.Select(fa => new ActorDto
+                Actors = film.FilmActors?.Select(fa => new ActorDto
                 {
                     Id = fa.Actor.Id,
                     FullName = $"{fa.Actor.FirstName} {fa.Actor.LastName}",
                     Role = fa.Role
-                }).ToList()
+                }).ToList() ?? new List<ActorDto>()
             };
         }
     }
