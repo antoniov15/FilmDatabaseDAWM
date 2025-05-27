@@ -7,6 +7,7 @@ namespace FilmDatabase.Core.Interfaces
     public interface IFilmService
     {
         Task<IEnumerable<FilmDto>> GetAllFilmsWithActorsAsync();
+        Task<PagedResult<FilmDto>> GetFilmsWithFilteringSortingPagingAsync(FilmQueryParameters queryParams);
         Task<FilmDto?> GetFilmWithActorsAsync(int id);
         Task<FilmDto> CreateFilmAsync(FilmDto filmDto);
         Task<FilmDto?> UpdateFilmAsync(FilmDto filmDto);

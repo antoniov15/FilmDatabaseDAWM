@@ -1,0 +1,330 @@
+﻿@baseUrl = https://localhost:7195
+@httpUrl = http://localhost:5080
+
+###
+# TEMA 2 - FILM DATABASE API TESTS
+# Teste complete pentru toate funcționalitățile implementate
+###
+
+###
+# 1. TESTE PENTRU ENDPOINT GET CU FUNCȚIONALITĂȚI AVANSATE
+###
+
+### 1.1. Test GET standard (fără parametri) - primul set de rezultate
+GET {{baseUrl}}/api/films
+Accept: application/json
+
+### 1.2. Test GET cu paginare - pagina 1, 5 elemente
+GET {{baseUrl}}/api/films?pageNumber=1&pageSize=5
+Accept: application/json
+
+### 1.3. Test GET cu paginare - pagina 2, 3 elemente
+GET {{baseUrl}}/api/films?pageNumber=2&pageSize=3
+Accept: application/json
+
+###
+# 2. TESTE PENTRU FILTRARE (6 criterii implementate)
+###
+
+### 2.1. Filtrare după gen
+GET {{baseUrl}}/api/films?genre=Drama
+Accept: application/json
+
+### 2.2. Filtrare după regizor
+GET {{baseUrl}}/api/films?director=Christopher
+Accept: application/json
+
+### 2.3. Filtrare după titlu
+GET {{baseUrl}}/api/films?title=Inception
+Accept: application/json
+
+### 2.4. Filtrare după anul exact
+GET {{baseUrl}}/api/films?year=2010
+Accept: application/json
+
+### 2.5. Filtrare după intervalul de ani
+GET {{baseUrl}}/api/films?minYear=1990&maxYear=2000
+Accept: application/json
+
+### 2.6. Filtrare combinată - gen și regizor
+GET {{baseUrl}}/api/films?genre=Sci-Fi&director=Christopher
+Accept: application/json
+
+###
+# 3. TESTE PENTRU SORTARE (4 opțiuni implementate)
+###
+
+### 3.1. Sortare după titlu crescător
+GET {{baseUrl}}/api/films?sortBy=Title&sortOrder=asc
+Accept: application/json
+
+### 3.2. Sortare după titlu descrescător
+GET {{baseUrl}}/api/films?sortBy=Title&sortOrder=desc
+Accept: application/json
+
+### 3.3. Sortare după an crescător
+GET {{baseUrl}}/api/films?sortBy=Year&sortOrder=asc
+Accept: application/json
+
+### 3.4. Sortare după an descrescător
+GET {{baseUrl}}/api/films?sortBy=Year&sortOrder=desc
+Accept: application/json
+
+### 3.5. Sortare după regizor
+GET {{baseUrl}}/api/films?sortBy=Director&sortOrder=asc
+Accept: application/json
+
+### 3.6. Sortare după gen
+GET {{baseUrl}}/api/films?sortBy=Genre&sortOrder=desc
+Accept: application/json
+
+###
+# 4. TESTE COMBINATE (filtrare + sortare + paginare)
+###
+
+### 4.1. Combinație complexă 1
+GET {{baseUrl}}/api/films?genre=Sci-Fi&sortBy=Year&sortOrder=desc&pageNumber=1&pageSize=3
+Accept: application/json
+
+### 4.2. Combinație complexă 2
+GET {{baseUrl}}/api/films?director=Christopher&minYear=2000&sortBy=Title&pageNumber=1&pageSize=10
+Accept: application/json
+
+### 4.3. Combinație cu toate filtrele
+GET {{baseUrl}}/api/films?genre=Drama&director=Frank&title=Shawshank&minYear=1990&maxYear=2000&sortBy=Year&sortOrder=asc&pageNumber=1&pageSize=5
+Accept: application/json
+
+###
+# 5. TESTE PENTRU VALIDĂRI ȘI ERORI
+###
+
+### 5.1. Test validare sortBy invalid (ar trebui să returneze 400)
+GET {{baseUrl}}/api/films?sortBy=InvalidField
+Accept: application/json
+
+### 5.2. Test validare sortOrder invalid (ar trebui să returneze 400)
+GET {{baseUrl}}/api/films?sortOrder=invalid
+Accept: application/json
+
+### 5.3. Test paginare cu pageNumber 0 (ar trebui să returneze 400)
+GET {{baseUrl}}/api/films?pageNumber=0
+Accept: application/json
+
+### 5.4. Test paginare cu pageSize foarte mare (ar trebui să fie limitat la 100)
+GET {{baseUrl}}/api/films?pageSize=500
+Accept: application/json
+
+###
+# 6. TESTE PENTRU ENDPOINTS DIN TEMA 1 (compatibilitate)
+###
+
+### 6.1. GET toate filmele (endpoint de compatibilitate)
+GET {{baseUrl}}/api/films/all
+Accept: application/json
+
+### 6.2. GET film specific după ID
+GET {{baseUrl}}/api/films/1
+Accept: application/json
+
+### 6.3. GET film inexistent (ar trebui să returneze 404)
+GET {{baseUrl}}/api/films/999
+Accept: application/json
+
+###
+# 7. TESTE PENTRU ENDPOINT POST (din Tema 1)
+###
+
+### 7.1. POST - Creare film nou cu actori
+POST {{baseUrl}}/api/films
+Content-Type: application/json
+
+{
+  "id": 0,
+  "title": "Test Movie for Tema 2",
+  "year": 2024,
+  "genre": "Action",
+  "director": "Test Director",
+  "description": "A test movie created for API testing - Tema 2",
+  "actors": [
+    {
+      "id": 0,
+      "fullName": "Test Actor One",
+      "role": "Main Character"
+    },
+    {
+      "id": 0,
+      "fullName": "Test Actor Two",
+      "role": "Supporting Character"
+    }
+  ]
+}
+
+### 7.2. POST - Creare film fără titlu (ar trebui să returneze 400)
+POST {{baseUrl}}/api/films
+Content-Type: application/json
+
+{
+  "id": 0,
+  "title": "",
+  "year": 2024,
+  "genre": "Test",
+  "director": "Test Director",
+  "description": "Film without title",
+  "actors": []
+}
+
+###
+# 8. TESTE PENTRU ENDPOINT PUT (TEMA 2 - CERINȚA PRINCIPALĂ)
+###
+
+### 8.1. PUT - Actualizare film existent (înlocuiește ID-ul cu unul real)
+PUT {{baseUrl}}/api/films/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Inception - Updated for Tema 2",
+  "year": 2010,
+  "genre": "Sci-Fi Thriller",
+  "director": "Christopher Nolan",
+  "description": "Updated description for testing PUT endpoint - Tema 2 DAWM",
+  "actors": []
+}
+
+### 8.2. PUT - Film inexistent (ar trebui să returneze 404 prin middleware)
+PUT {{baseUrl}}/api/films/999
+Content-Type: application/json
+
+{
+  "id": 999,
+  "title": "Non-existent Film",
+  "year": 2024,
+  "genre": "Test",
+  "director": "Test Director",
+  "description": "This should return 404 handled by ErrorHandlingMiddleware",
+  "actors": []
+}
+
+### 8.3. PUT - ID mismatch (ar trebui să returneze 400)
+PUT {{baseUrl}}/api/films/1
+Content-Type: application/json
+
+{
+  "id": 2,
+  "title": "ID Mismatch Test",
+  "year": 2024,
+  "genre": "Test",
+  "director": "Test Director",
+  "description": "This should return 400 due to ID mismatch between URL and body",
+  "actors": []
+}
+
+### 8.4. PUT - Fără titlu (ar trebui să returneze 400)
+PUT {{baseUrl}}/api/films/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "",
+  "year": 2024,
+  "genre": "Test",
+  "director": "Test Director",
+  "description": "Film without title should return 400",
+  "actors": []
+}
+
+###
+# 9. TESTE PENTRU ENDPOINT DELETE (din Tema 1)
+###
+
+### 9.1. DELETE film existent
+DELETE {{baseUrl}}/api/films/3
+Accept: application/json
+
+### 9.2. DELETE film inexistent (ar trebui să returneze 404)
+DELETE {{baseUrl}}/api/films/999
+Accept: application/json
+
+###
+# 10. TESTE PENTRU VERSIUNEA HTTP (fără HTTPS)
+###
+
+### 10.1. HTTP - GET cu filtrare și sortare
+GET {{httpUrl}}/api/films?genre=Drama&sortBy=Year&sortOrder=desc
+Accept: application/json
+
+### 10.2. HTTP - PUT test
+PUT {{httpUrl}}/api/films/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "HTTP Test Update",
+  "year": 2010,
+  "genre": "Sci-Fi",
+  "director": "Christopher Nolan",
+  "description": "HTTP endpoint test for Tema 2",
+  "actors": []
+}
+
+### 10.3. HTTP - POST test
+POST {{httpUrl}}/api/films
+Content-Type: application/json
+
+{
+  "id": 0,
+  "title": "HTTP Test Movie",
+  "year": 2024,
+  "genre": "Test",
+  "director": "HTTP Test Director",
+  "description": "Test via HTTP protocol",
+  "actors": []
+}
+
+###
+# 11. TESTE PENTRU DEMONSTRAREA MIDDLEWARE-ULUI
+###
+
+### 11.1. Test middleware cu KeyNotFoundException
+PUT {{baseUrl}}/api/films/99999
+Content-Type: application/json
+
+{
+  "id": 99999,
+  "title": "Middleware Test",
+  "year": 2024,
+  "genre": "Test",
+  "director": "Middleware Test",
+  "description": "This should trigger ErrorHandlingMiddleware with KeyNotFoundException → 404",
+  "actors": []
+}
+
+###
+# 12. TESTE PENTRU EDGE CASES
+###
+
+### 12.1. Test cu caractere speciale în filtrare
+GET {{baseUrl}}/api/films?title=Inception&director=Nolan
+Accept: application/json
+
+### 12.2. Test cu parametri null/empty
+GET {{baseUrl}}/api/films?genre=&director=&sortBy=Title
+Accept: application/json
+
+### 12.3. Test cu paginare la limită
+GET {{baseUrl}}/api/films?pageNumber=999&pageSize=1
+Accept: application/json
+
+###
+# 13. DEMONSTRAREA TUTUROR FUNCȚIONALITĂȚILOR TEMA 2
+###
+
+### 13.1. Demonstrare completă - toate funcționalitățile
+GET {{baseUrl}}/api/films?genre=Sci-Fi&director=Christopher&minYear=2000&maxYear=2020&sortBy=Year&sortOrder=desc&pageNumber=1&pageSize=5
+Accept: application/json
+
+### 13.2. Test final - validarea implementării complete
+GET {{baseUrl}}/api/films?title=Inception&sortBy=Title&sortOrder=asc&pageNumber=1&pageSize=10
+Accept: application/json
+
+###
